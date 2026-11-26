@@ -1336,6 +1336,93 @@
       pointer-events: auto;
     }
 
+    /* Modal nhắc bật âm thanh khi vừa vào trang */
+    .sound-prompt-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(43, 33, 41, 0.52);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 250;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.38s ease;
+    }
+    .sound-prompt-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sound-prompt-card {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF7F6 100%);
+      width: 100%;
+      max-width: 315px;
+      border-radius: 30px;
+      padding: 28px 22px 22px 22px;
+      text-align: center;
+      border: 2.5px solid #FFE0E7;
+      box-shadow: 0 22px 50px rgba(43, 33, 41, 0.28), 0 8px 24px rgba(255, 117, 143, 0.25);
+      transform: scale(0.9) translateY(18px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .sound-prompt-overlay.show .sound-prompt-card {
+      transform: scale(1) translateY(0);
+    }
+    .sound-prompt-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 14px auto;
+      background: linear-gradient(135deg, #FFE5EC, #FFF3B0);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 0 0 8px rgba(255, 117, 143, 0.16), 0 8px 20px rgba(255, 117, 143, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      animation: soundIconPulse 2s infinite ease-in-out;
+    }
+    @keyframes soundIconPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 117, 143, 0.16), 0 8px 20px rgba(255, 117, 143, 0.25); }
+      50% { transform: scale(1.07); box-shadow: 0 0 0 13px rgba(255, 117, 143, 0.08), 0 12px 26px rgba(255, 117, 143, 0.35); }
+    }
+    .btn-sound-confirm {
+      width: 100%;
+      margin-top: 18px;
+      background: linear-gradient(135deg, #FF8FA3 0%, #FF4D6D 100%);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(255, 77, 109, 0.42);
+      transition: transform 0.18s ease, box-shadow 0.2s ease;
+    }
+    .btn-sound-confirm:active {
+      transform: scale(0.95);
+    }
+    .btn-sound-skip {
+      margin-top: 11px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 10px;
+      opacity: 0.85;
+    }
+    .btn-sound-skip:active {
+      opacity: 0.55;
+    }
+
     /* Modal xác nhận gửi tim */
     .thankyou-modal-backdrop {
       position: fixed;
@@ -1789,6 +1876,25 @@
             🏠 Xem lại từ đầu 🔄
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Modal Nhắc Bật Âm Thanh Khi Vừa Vào Link -->
+    <div class="sound-prompt-overlay show" id="soundPromptOverlay" role="dialog" aria-modal="true" aria-labelledby="soundPromptTitle">
+      <div class="sound-prompt-card">
+        <div class="sound-prompt-icon">🔊</div>
+        <h3 id="soundPromptTitle" style="font-family: var(--font-display); font-size: 19px; font-weight: 800; color: #351C28; line-height: 1.3;">
+          Bật âm thanh lên nha Mẹ ơi! 🎶
+        </h3>
+        <p style="font-size: 13.5px; font-weight: 600; color: var(--text-muted); margin-top: 10px; line-height: 1.55;">
+          Mẹ nhớ bật loa và tăng âm lượng điện thoại lên để nghe nhạc nền, tiếng hiệu ứng và món quà bất ngờ ở cuối nha~ 💌🌸
+        </p>
+        <button class="btn-sound-confirm" id="btnConfirmSound" onclick="confirmSoundAndEnter()">
+          🔊 Bật âm thanh & Mở quà ngay ✨
+        </button>
+        <button class="btn-sound-skip" id="btnSkipSound" onclick="skipSoundAndEnter()">
+          Để sau (xem không có nhạc nền)
+        </button>
       </div>
     </div>
 
@@ -2499,10 +2605,38 @@
         });
     }
 
+    function confirmSoundAndEnter() {
+      bgmUserPaused = false;
+      bgmPausedForCall = false;
+      removeAutoplayUnlockListeners();
+      initAudio();
+
+      if (bgmAudio) {
+        bgmAudio.volume = 0.35;
+        bgmAudio.play()
+          .then(() => syncBgmButton(true))
+          .catch(() => syncBgmButton(false));
+      }
+      playEnvelopeChime();
+
+      const overlay = document.getElementById('soundPromptOverlay');
+      if (overlay) overlay.classList.remove('show');
+    }
+
+    function skipSoundAndEnter() {
+      bgmUserPaused = true;
+      bgmPausedForCall = false;
+      removeAutoplayUnlockListeners();
+      pauseBgm();
+
+      const overlay = document.getElementById('soundPromptOverlay');
+      if (overlay) overlay.classList.remove('show');
+    }
+
     function unlockAudioOnFirstGesture(e) {
       initAudio();
-      // Nếu người dùng bấm thẳng vào nút tắt/bật Lofi thì để toggleBgm xử lý
-      if (e && e.target && e.target.closest && e.target.closest('#btnToggleBgm')) {
+      // Nếu người dùng bấm vào nút tắt/bật Lofi hoặc nút bỏ qua nhạc thì không tự phát chồng
+      if (e && e.target && e.target.closest && (e.target.closest('#btnToggleBgm') || e.target.closest('#btnSkipSound'))) {
         removeAutoplayUnlockListeners();
         return;
       }
