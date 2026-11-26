@@ -1,0 +1,3049 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Tri Ân 20/11 - Mẹ Huyền Yêu Quý ❤️</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Noto+Sans+SC:wght@400;600;700;900&family=Pacifico&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-cream: #FFF8F7;
+      --pastel-pink: #FFD1DC;
+      --pastel-pink-deep: #FF758F;
+      --pastel-rose: #FF477E;
+      --pastel-green: #D8F3DC;
+      --pastel-purple: #E8D7FF;
+      --pastel-yellow: #FFF3B0;
+      --text-dark: #2B2129;
+      --text-muted: #7A6871;
+      --font-display: 'Epilogue', sans-serif;
+      --font-body: 'Quicksand', sans-serif;
+      --font-hand: 'Pacifico', cursive;
+      --font-zh: 'Noto Sans SC', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #201A1E;
+      font-family: var(--font-body);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Khung giả lập iPhone trên màn hình lớn, full screen trên mobile */
+    #phone-frame {
+      width: 100%;
+      max-width: 412px;
+      height: 100dvh;
+      max-height: 890px;
+      position: relative;
+      background: linear-gradient(180deg, #FFF9F7 0%, #FFF0F3 100%);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.35), 0 0 0 8px rgba(255,255,255,0.1);
+      border-radius: clamp(0px, 4vw, 40px);
+    }
+
+    /* Header thanh trạng thái & tiến trình */
+    .top-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(255, 248, 247, 0.95), rgba(255, 248, 247, 0));
+    }
+
+    .progress-track {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: #EED2D7;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+
+    .step-dot.active {
+      width: 26px;
+      background: var(--pastel-pink-deep);
+      box-shadow: 0 2px 8px rgba(255, 117, 143, 0.5);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pill-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 117, 143, 0.25);
+      border-radius: 20px;
+      padding: 5px 11px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(255, 117, 143, 0.1);
+      transition: all 0.2s;
+    }
+    .pill-btn:active {
+      transform: scale(0.92);
+    }
+    .pill-btn.active {
+      background: #FFF0A5;
+      border-color: #E2A600;
+      color: #7A5700;
+    }
+
+    /* Container chứa các màn */
+    .viewport {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen-stage {
+      position: absolute;
+      inset: 0;
+      padding: 68px 18px 86px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(28px) scale(0.97);
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .screen-stage.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+      z-index: 10;
+    }
+
+    /* Thanh điều hướng cố định bên dưới */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 14px 20px;
+      z-index: 90;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(255, 240, 243, 0.96) 60%, rgba(255, 240, 243, 0));
+    }
+
+    .btn-nav-prev {
+      pointer-events: auto;
+      background: white;
+      border: 1px solid #FFD1DC;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 99px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      transform: translateX(-15px);
+      transition: all 0.3s;
+    }
+    .btn-nav-prev.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .btn-nav-prev:active {
+      transform: scale(0.94);
+    }
+
+    .btn-nav-next {
+      pointer-events: auto;
+      margin-left: auto;
+      background: linear-gradient(135deg, #FF8FA3 0%, #FF4D6D 100%);
+      color: white;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 99px;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(255, 77, 109, 0.42);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(0);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-nav-next:active {
+      transform: scale(0.93);
+    }
+    .btn-nav-next.pulse-hint {
+      animation: floatPulse 2s infinite ease-in-out;
+    }
+    @keyframes floatPulse {
+      0%, 100% { transform: translateY(0); box-shadow: 0 8px 22px rgba(255, 77, 109, 0.42); }
+      50% { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(255, 77, 109, 0.65); }
+    }
+
+    /* ==============================================================
+       MÀN 1: PHONG BÌ TƯƠNG TÁC
+       ============================================================== */
+    #stage1 {
+      justify-content: center;
+      padding-top: 64px;
+      padding-bottom: 84px;
+    }
+
+    .stage1-inner {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .mascot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 0;
+      cursor: pointer;
+    }
+
+    .mascot-speech {
+      background: white;
+      border-radius: 20px;
+      padding: 9px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-dark);
+      box-shadow: 0 6px 18px rgba(255, 117, 143, 0.22);
+      border: 1.5px solid #FFCAD4;
+      text-align: center;
+      margin-bottom: 8px;
+      max-width: 290px;
+      position: relative;
+      animation: speechBounce 3s infinite ease-in-out;
+    }
+    .mascot-speech::after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 7px 7px 0 7px;
+      border-style: solid;
+      border-color: white transparent transparent transparent;
+    }
+    @keyframes speechBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .bear-svg {
+      width: 120px;
+      height: 120px;
+      filter: drop-shadow(0 8px 16px rgba(139, 90, 43, 0.18));
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .bear-svg:active {
+      transform: scale(0.92) rotate(-3deg);
+    }
+    .bear-svg .hand-wave {
+      transform-origin: 22px 64px;
+      animation: wave 2s infinite ease-in-out;
+    }
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(24deg); }
+    }
+    .bear-svg .eye {
+      transform-origin: center;
+      animation: blink 4s infinite;
+    }
+    @keyframes blink {
+      0%, 96%, 100% { transform: scaleY(1); }
+      98% { transform: scaleY(0.15); }
+    }
+
+    .envelope-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .envelope-interactive {
+      width: 290px;
+      height: 195px;
+      background: #FFE3E8;
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0 16px 36px rgba(255, 117, 143, 0.28);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      border: 3px solid #FFFFFF;
+      margin: 4px 0 0 0;
+      transition: transform 0.3s;
+    }
+    .envelope-interactive:hover {
+      transform: translateY(-4px);
+    }
+    .envelope-interactive .flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 142px solid transparent;
+      border-right: 142px solid transparent;
+      border-top: 108px solid #FFBAC7;
+      transform-origin: top;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 4;
+    }
+    .envelope-interactive .pocket {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 142px solid #FFCCD5;
+      border-right: 142px solid #FFCCD5;
+      border-bottom: 96px solid #FFA6B9;
+      border-radius: 0 0 17px 17px;
+      z-index: 3;
+    }
+    .envelope-interactive .seal {
+      position: absolute;
+      top: 76px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #FF3366, #FF6B8B);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 16px rgba(255, 51, 102, 0.45);
+      z-index: 5;
+      color: white;
+      font-size: 22px;
+      border: 2px solid white;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      animation: sealBeat 2.2s infinite ease-in-out;
+    }
+    @keyframes sealBeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.09); }
+    }
+    .envelope-interactive .letter-content {
+      position: absolute;
+      width: 256px;
+      height: 164px;
+      background: white;
+      border-radius: 16px;
+      z-index: 2;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      opacity: 0;
+      transform: scale(0.8);
+      pointer-events: none;
+      transition: transform 0.65s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s 0.18s ease;
+    }
+    .envelope-interactive.opened .flap {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+    .envelope-interactive.opened .seal {
+      animation: none;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .envelope-interactive.opened .letter-content {
+      opacity: 1;
+      transform: translateY(-84px) scale(1);
+      pointer-events: auto;
+      z-index: 5;
+      box-shadow: 0 14px 28px rgba(255, 117, 143, 0.22), 0 4px 10px rgba(74, 62, 61, 0.08);
+    }
+
+    .envelope-hint {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--pastel-pink-deep);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 117, 143, 0.25);
+      padding: 5px 14px;
+      border-radius: 999px;
+      letter-spacing: 0.01em;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      animation: hintFloat 2.4s infinite ease-in-out;
+    }
+    .envelope-hint.opened-hint {
+      animation: none;
+      color: var(--text-muted);
+      background: rgba(200, 230, 201, 0.45);
+      border-color: rgba(74, 101, 78, 0.2);
+    }
+    @keyframes hintFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .secret-button {
+      background: transparent;
+      border: 1.5px dashed #FF9FB2;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 7px 18px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 2px;
+    }
+    .secret-button:active {
+      transform: scale(0.9);
+      background: #FFE8ED;
+      color: #E63946;
+    }
+
+    /* ==============================================================
+       MÀN 2: BÓNG BAY LỜI CHÚC (ĐÃ CHỈNH: CHƯA BẤM THÌ KHÔNG HIỆN THẺ)
+       ============================================================== */
+    .balloon-sky {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      margin: 10px 0;
+    }
+
+    .balloon-item {
+      position: absolute;
+      width: 72px;
+      height: 88px;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 22px;
+      box-shadow: inset -7px -7px 14px rgba(0,0,0,0.12), 0 10px 22px rgba(0,0,0,0.1);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+      animation: balloonFloat 4s infinite ease-in-out;
+    }
+    .balloon-item:active {
+      transform: scale(0.85);
+    }
+    .balloon-item::after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 7px solid currentColor;
+    }
+    .balloon-item::before {
+      content: '';
+      position: absolute;
+      bottom: -32px;
+      left: 50%;
+      width: 1.5px;
+      height: 25px;
+      background: rgba(180, 150, 160, 0.6);
+      transform-origin: top center;
+      animation: stringWave 2.5s infinite ease-in-out;
+    }
+    .balloon-highlight {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      width: 14px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 50%;
+      transform: rotate(-35deg);
+    }
+
+    @keyframes balloonFloat {
+      0%, 100% { transform: translateY(0) rotate(2deg); }
+      50% { transform: translateY(-16px) rotate(-3deg); }
+    }
+    @keyframes stringWave {
+      0%, 100% { transform: rotate(-4deg); }
+      50% { transform: rotate(4deg); }
+    }
+
+    /* Modal bung lời chúc giữa màn hình khi bấm bóng */
+    .wish-center-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(43, 33, 41, 0.55);
+      backdrop-filter: blur(8px);
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .wish-center-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .wish-center-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 320px;
+      border-radius: 28px;
+      padding: 26px 20px;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+      border: 3px solid #FFE5EC;
+      transform: scale(0.7) translateY(40px);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .wish-center-overlay.show .wish-center-card {
+      transform: scale(1) translateY(0);
+    }
+    .wish-tag-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0 auto 12px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: #FFF0F3;
+      box-shadow: 0 6px 16px rgba(255, 117, 143, 0.25);
+    }
+
+    /* Lịch sử các lời chúc đã mở ở bên dưới màn 2 */
+    .opened-wishes-list {
+      width: 100%;
+      max-height: 180px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 4px;
+    }
+    .mini-wish-chip {
+      background: white;
+      border-radius: 16px;
+      padding: 10px 14px;
+      border-left: 4px solid var(--pastel-pink-deep);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: chipIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes chipIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==============================================================
+       MÀN 3: ALBUM POLAROID KỶ NIỆM (PHONG CÁCH SCRAPBOOK CHỒNG TẤM)
+       ============================================================== */
+    .polaroid-deck {
+      position: relative;
+      width: 288px;
+      height: 382px;
+      margin: 18px 0 22px 0;
+      perspective: 1100px;
+      cursor: pointer;
+    }
+
+    .polaroid-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      padding: 10px 10px 30px 10px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px -4px rgba(255, 117, 143, 0.18), 0 2px 6px 0 rgba(74, 62, 61, 0.06);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(221, 191, 194, 0.35);
+      transform-origin: center center;
+      transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.42s ease, box-shadow 0.4s ease;
+      will-change: transform, opacity;
+      pointer-events: none;
+    }
+
+    /* Tầng chồng nhiều tấm Polaroid xoay nhẹ từ -2deg đến +2.5deg */
+    .polaroid-card[data-stack-pos="0"] {
+      z-index: 40;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(0px, 0px) rotate(var(--card-rot, -1.5deg)) scale(1);
+      box-shadow: 0 14px 30px -6px rgba(255, 117, 143, 0.24), 0 4px 10px rgba(74, 62, 61, 0.08);
+    }
+    .polaroid-card[data-stack-pos="0"]:active {
+      transform: translate(0px, 2px) rotate(var(--card-rot, -1.5deg)) scale(0.985);
+    }
+    .polaroid-card[data-stack-pos="1"] {
+      z-index: 30;
+      opacity: 0.96;
+      transform: translate(8px, 7px) rotate(var(--card-rot, 2.2deg)) scale(0.97);
+    }
+    .polaroid-card[data-stack-pos="2"] {
+      z-index: 20;
+      opacity: 0.9;
+      transform: translate(-8px, 13px) rotate(var(--card-rot, -2deg)) scale(0.94);
+    }
+    .polaroid-card[data-stack-pos="3"] {
+      z-index: 10;
+      opacity: 0.82;
+      transform: translate(5px, 18px) rotate(var(--card-rot, 2.5deg)) scale(0.91);
+    }
+
+    /* Animation trượt & lật mượt mà khi chuyển sang ảnh tiếp theo */
+    .polaroid-card.flip-out-next {
+      z-index: 50 !important;
+      opacity: 0 !important;
+      transform: translateX(118%) translateY(-22px) rotate(13deg) scale(0.93) !important;
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.32s ease !important;
+    }
+    .polaroid-card.flip-out-prev {
+      z-index: 50 !important;
+      opacity: 0 !important;
+      transform: translateX(-118%) translateY(-22px) rotate(-13deg) scale(0.93) !important;
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.32s ease !important;
+    }
+
+    .polaroid-photo-wrapper {
+      width: 100%;
+      height: 256px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #F4ECEA;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .polaroid-photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Băng dính Washi Tape scrapbook bán trong suốt ở mép trên */
+    .washi-tape {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      width: 92px;
+      height: 22px;
+      border-left: 2px dashed rgba(255, 255, 255, 0.6);
+      border-right: 2px dashed rgba(255, 255, 255, 0.6);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .washi-tape.tape-pink {
+      background: rgba(255, 209, 220, 0.85);
+      transform: translateX(-50%) rotate(-2.5deg);
+    }
+    .washi-tape.tape-lilac {
+      background: rgba(225, 212, 249, 0.85);
+      transform: translateX(-50%) rotate(2.5deg);
+    }
+    .washi-tape.tape-mint {
+      background: rgba(200, 230, 201, 0.85);
+      transform: translateX(-50%) rotate(-1.8deg);
+    }
+    .washi-tape.tape-butter {
+      background: rgba(255, 243, 176, 0.88);
+      transform: translateX(-50%) rotate(2deg);
+    }
+
+    .polaroid-caption {
+      margin-top: 12px;
+      padding: 0 6px;
+      font-size: 13px;
+      font-weight: 700;
+      font-style: italic;
+      color: #4A3E3D;
+      text-align: center;
+      line-height: 1.42;
+      font-family: var(--font-body);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .photo-thumb-strip {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .thumb-item {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      opacity: 0.6;
+    }
+    .thumb-item.active {
+      border-color: var(--pastel-pink-deep);
+      transform: scale(1.12);
+      opacity: 1;
+      box-shadow: 0 4px 14px rgba(255, 117, 143, 0.4);
+    }
+    .thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ==============================================================
+       MÀN 4: THẺ BÀI SSR HOLOGRAPHIC (RÕ NÉT, CÂN ĐỐI ẢNH CHÂN DUNG)
+       ============================================================== */
+    #stage4 {
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .holo-deck-stage {
+      perspective: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 4px 0;
+      width: 100%;
+    }
+
+    .ssr-holo-card {
+      width: 298px;
+      height: 472px;
+      border-radius: 26px;
+      position: relative;
+      background: linear-gradient(145deg, #FFFFFF, #FFF2F5);
+      box-shadow: 0 20px 48px rgba(255, 117, 143, 0.35), 0 0 0 5px #FFFFFF;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out;
+      cursor: grab;
+      border: 2px solid rgba(255, 182, 193, 0.4);
+    }
+
+    /* Ánh kim Holographic đổi màu ngũ sắc */
+    .holo-rainbow-glare {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        125deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.6) 20%,
+        rgba(255, 143, 163, 0.7) 35%,
+        rgba(254, 217, 146, 0.7) 50%,
+        rgba(168, 230, 207, 0.7) 65%,
+        rgba(202, 187, 252, 0.7) 80%,
+        transparent 100%
+      );
+      background-size: 250% 250%;
+      opacity: 0.75;
+      mix-blend-mode: color-dodge;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 20;
+    }
+
+    .card-layout {
+      position: relative;
+      z-index: 10;
+      padding: 16px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .badge-ssr {
+      background: linear-gradient(135deg, #FFB703, #FB8500);
+      color: white;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(251, 133, 0, 0.4);
+      letter-spacing: 0.5px;
+    }
+    .badge-hp {
+      font-size: 13px;
+      font-weight: 800;
+      color: #E63946;
+      background: #FFE8EC;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .card-portrait-box {
+      width: 100%;
+      height: 232px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      position: relative;
+      background: #EAE2DF;
+    }
+    .card-portrait-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 45%;
+      display: block;
+    }
+
+    .card-title-group {
+      text-align: center;
+      margin: 6px 0;
+    }
+    .card-teacher-name {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 900;
+      color: #351C28;
+    }
+    .card-honor-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #D62246;
+      background: #FFF0F3;
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-top: 4px;
+      border: 1px solid #FFCCD5;
+    }
+
+    .card-skills-board {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      padding: 10px 12px;
+      border: 1.5px solid #FFE4EA;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .skill-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-dark);
+    }
+    .skill-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #FFF3F6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ==============================================================
+       MÀN 5: VIDEO CALL & LỜI CHÚC TRI ÂN
+       ============================================================== */
+    .call-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .avatar-incoming {
+      width: 136px;
+      height: 136px;
+      border-radius: 50%;
+      background: white;
+      border: 4px solid #FFFFFF;
+      overflow: hidden;
+      box-shadow: 0 0 0 10px rgba(255, 117, 143, 0.25), 0 0 0 22px rgba(255, 117, 143, 0.12);
+      animation: callRings 2s infinite ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .avatar-incoming img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 22%;
+      display: block;
+    }
+    @keyframes callRings {
+      0%, 100% { box-shadow: 0 0 0 10px rgba(255, 117, 143, 0.25), 0 0 0 20px rgba(255, 117, 143, 0.1); }
+      50% { box-shadow: 0 0 0 16px rgba(255, 117, 143, 0.35), 0 0 0 32px rgba(255, 117, 143, 0.04); }
+    }
+
+    /* Hiệu ứng rung chân thực khi có cuộc gọi đến */
+    #phone-frame.ringing {
+      animation: phoneBuzzFrame 1.5s infinite ease-in-out;
+    }
+    .call-container.ringing .avatar-incoming {
+      animation: callRings 1.2s infinite ease-in-out, avatarBuzz 1.5s infinite ease-in-out;
+    }
+    @keyframes phoneBuzzFrame {
+      0%, 56%, 100% { transform: translate(0, 0) rotate(0deg); }
+      4%  { transform: translate(-2.5px, 1px) rotate(-0.35deg); }
+      8%  { transform: translate(2.5px, -1px) rotate(0.35deg); }
+      12% { transform: translate(-2.5px, -1px) rotate(-0.3deg); }
+      16% { transform: translate(2.5px, 1px) rotate(0.3deg); }
+      20% { transform: translate(-2px, 0.5px) rotate(-0.25deg); }
+      24% { transform: translate(2px, -0.5px) rotate(0.25deg); }
+      28%, 34% { transform: translate(0, 0) rotate(0deg); }
+      38% { transform: translate(-2.5px, 1px) rotate(-0.35deg); }
+      42% { transform: translate(2.5px, -1px) rotate(0.35deg); }
+      46% { transform: translate(-2px, -1px) rotate(-0.3deg); }
+      50% { transform: translate(2px, 1px) rotate(0.3deg); }
+      54% { transform: translate(-1px, 0) rotate(-0.15deg); }
+    }
+    @keyframes avatarBuzz {
+      0%, 56%, 100% { transform: rotate(0deg) scale(1); }
+      6%, 18%, 40%, 50% { transform: rotate(-6deg) scale(1.04); }
+      12%, 24%, 45% { transform: rotate(6deg) scale(1.04); }
+      30%, 34% { transform: rotate(0deg) scale(1); }
+    }
+
+    .call-btn-row {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      margin-top: 36px;
+    }
+    .btn-circle-action {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-call-accept {
+      background: linear-gradient(135deg, #2EC4B6, #20BF55);
+      animation: acceptShake 1.8s infinite ease-in-out;
+    }
+    @keyframes acceptShake {
+      0%, 100% { transform: rotate(0) scale(1); }
+      15% { transform: rotate(-10deg) scale(1.08); }
+      30% { transform: rotate(10deg) scale(1.08); }
+      45% { transform: rotate(-6deg) scale(1.04); }
+      60% { transform: rotate(6deg) scale(1.04); }
+      75% { transform: rotate(0) scale(1); }
+    }
+    .btn-call-decline {
+      background: linear-gradient(135deg, #FF6B6B, #EE5253);
+    }
+
+    /* Khung giao diện Video call khi bấm nghe (hiển thị tràn khung máy trên top-header & bottom-bar) */
+    .active-video-room {
+      position: absolute;
+      inset: 0;
+      background: #110E10;
+      border-radius: inherit;
+      z-index: 120;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .active-video-room.connected {
+      display: flex;
+    }
+    .video-mock-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #0D0A0C;
+      opacity: 1;
+    }
+    .video-call-topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 18px 16px 28px 16px;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      color: white;
+      z-index: 15;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+      pointer-events: none;
+    }
+    .caller-live-pill {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(20, 16, 19, 0.48);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 5px 12px 5px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+    .caller-mini-avt {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      flex-shrink: 0;
+      position: relative;
+    }
+    .caller-mini-avt img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 22%;
+      display: block;
+    }
+    .caller-live-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.2;
+    }
+    .caller-live-name {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+    .caller-live-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.88);
+      margin-top: 2px;
+    }
+    .rec-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #34D399;
+      box-shadow: 0 0 6px rgba(52, 211, 153, 0.9);
+      animation: recBlink 1.2s infinite;
+    }
+    @keyframes recBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    .call-signal-badge {
+      display: flex;
+      align-items: flex-end;
+      gap: 2.5px;
+      background: rgba(20, 16, 19, 0.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .signal-bar {
+      width: 3px;
+      border-radius: 2px;
+      background: #4ADE80;
+    }
+    .signal-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-left: 4px;
+      line-height: 1;
+    }
+
+    /* Khung camera phụ Picture-in-Picture (góc trên bên phải như gọi video thật) */
+    .call-pip-preview {
+      position: absolute;
+      top: 74px;
+      right: 14px;
+      width: 86px;
+      height: 120px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.78);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+      background: #231A20;
+      z-index: 16;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .call-pip-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 42%;
+      display: block;
+      transition: filter 0.25s ease, opacity 0.25s ease;
+    }
+    .call-pip-preview.cam-off img {
+      filter: blur(10px) brightness(0.45);
+      opacity: 0.6;
+    }
+    .call-pip-off-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      gap: 4px;
+      background: rgba(20, 15, 19, 0.45);
+      text-align: center;
+      padding: 6px;
+    }
+    .call-pip-preview.cam-off .call-pip-off-overlay {
+      display: flex;
+    }
+    .call-pip-tag {
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(6px);
+      color: #FFFFFF;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    /* Thanh điều khiển cuộc gọi phía dưới giống FaceTime / Messenger */
+    .video-call-bottom-area {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 36px 18px 22px 18px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.32) 60%, rgba(0, 0, 0, 0) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      z-index: 20;
+    }
+    .call-wish-shortcut {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .call-wish-shortcut:active {
+      transform: scale(0.94);
+      background: rgba(255, 255, 255, 0.32);
+    }
+    .video-call-dock {
+      width: 100%;
+      max-width: 310px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(24, 18, 22, 0.58);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 34px;
+      padding: 10px 16px;
+    }
+    .call-ctrl-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .call-ctrl-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.2s ease;
+    }
+    .call-ctrl-btn:active {
+      transform: scale(0.9);
+    }
+    .call-ctrl-btn.is-off {
+      background: rgba(255, 255, 255, 0.92);
+      color: #231918;
+    }
+    .call-ctrl-btn.btn-heart-react {
+      background: rgba(255, 117, 143, 0.35);
+      border: 1px solid rgba(255, 182, 193, 0.45);
+    }
+    .call-ctrl-btn.btn-hangup {
+      background: linear-gradient(135deg, #FF5252, #E63946);
+      box-shadow: 0 6px 18px rgba(230, 57, 70, 0.48);
+    }
+    .call-ctrl-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* Hạt tim bay lên trong cuộc gọi video */
+    .call-float-heart {
+      position: absolute;
+      bottom: 112px;
+      font-size: 26px;
+      pointer-events: none;
+      z-index: 25;
+      animation: callHeartRise 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes callHeartRise {
+      0% { opacity: 0; transform: translate(0, 10px) scale(0.5); }
+      18% { opacity: 1; transform: translate(var(--hx1, -8px), -35px) scale(1.1); }
+      100% { opacity: 0; transform: translate(var(--hx2, 14px), -230px) scale(1.35); }
+    }
+
+    /* Màn hình chúc mừng kết thúc (Ending overlay) */
+    .final-tribute-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 248, 247, 0.95);
+      backdrop-filter: blur(14px);
+      z-index: 80;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .final-tribute-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Modal xác nhận gửi tim */
+    .thankyou-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .thankyou-modal-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .thankyou-box {
+      background: white;
+      border-radius: 26px;
+      padding: 24px;
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+      transform: scale(0.85);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .thankyou-modal-backdrop.show .thankyou-box {
+      transform: scale(1);
+    }
+
+    /* Hiệu ứng tap nở tim/sao */
+    .tap-sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99999;
+      animation: sparkleFly 0.8s ease-out forwards;
+      font-size: 22px;
+    }
+    @keyframes sparkleFly {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.4); }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.4); }
+    }
+
+    .zh-text {
+      font-family: var(--font-zh);
+    }
+    .pinyin-line {
+      font-size: 11px;
+      color: var(--pastel-pink-deep);
+      font-weight: 700;
+      display: block;
+      margin-top: 1px;
+    }
+    body.hide-pinyin .pinyin-line {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="phone-frame">
+    
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="progress-track" id="progressTrack">
+        <div class="step-dot active" onclick="jumpToScreen(0)"></div>
+        <div class="step-dot" onclick="jumpToScreen(1)"></div>
+        <div class="step-dot" onclick="jumpToScreen(2)"></div>
+        <div class="step-dot" onclick="jumpToScreen(3)"></div>
+        <div class="step-dot" onclick="jumpToScreen(4)"></div>
+      </div>
+
+      <div class="header-actions">
+        <button class="pill-btn" id="btnTogglePinyin" onclick="togglePinyin()">
+          <span>拼</span> <span id="pinyinLabel">Pinyin</span>
+        </button>
+        <button class="pill-btn" id="btnToggleBgm" onclick="toggleBgm()">
+          <span id="bgmEmoji">🎵</span> <span>Lofi</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Viewport chứa 5 màn hình nối tiếp -->
+    <main class="viewport">
+
+      <!-- ==========================================
+           MÀN 1: PHONG BÌ MỪNG 20/11
+           ========================================== -->
+      <section class="screen-stage active" id="stage1">
+        <div class="stage1-inner">
+          
+          <div class="mascot-wrap" onclick="pokeMascot()">
+            <div class="mascot-speech" id="mascotBubble">
+              <span class="zh-text" lang="zh">老师好！</span><br>
+              Mẹ ơi, có quà gửi mẹ nè~ 🎁
+            </div>
+            
+            <!-- SVG Gấu Nâu Dễ Thương -->
+            <svg class="bear-svg" viewBox="0 0 100 100" fill="none">
+              <circle cx="28" cy="28" r="14" fill="#8B5A2B"/>
+              <circle cx="28" cy="28" r="7" fill="#FFCCD5"/>
+              <circle cx="72" cy="28" r="14" fill="#8B5A2B"/>
+              <circle cx="72" cy="28" r="7" fill="#FFCCD5"/>
+              <ellipse cx="50" cy="74" rx="30" ry="24" fill="#8B5A2B"/>
+              <ellipse cx="50" cy="76" rx="18" ry="14" fill="#F4DEB3"/>
+              <circle cx="50" cy="46" r="28" fill="#9C6634"/>
+              <ellipse cx="50" cy="52" rx="12" ry="9" fill="#F4DEB3"/>
+              <path d="M47 48 Q50 51 53 48 Q50 54 47 48 Z" fill="#4A2E12"/>
+              <path d="M50 51 V55" stroke="#4A2E12" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M46 55 Q50 58 54 55" stroke="#4A2E12" stroke-width="1.8" stroke-linecap="round"/>
+              <circle class="eye" cx="39" cy="43" r="3.5" fill="#2E1C0C"/>
+              <circle class="eye" cx="61" cy="43" r="3.5" fill="#2E1C0C"/>
+              <circle cx="40" cy="41.5" r="1.2" fill="#FFF"/>
+              <circle cx="62" cy="41.5" r="1.2" fill="#FFF"/>
+              <ellipse id="blushL" cx="33" cy="51" rx="5" ry="3.5" fill="#FF8FA3"/>
+              <ellipse id="blushR" cx="67" cy="51" rx="5" ry="3.5" fill="#FF8FA3"/>
+              <g class="hand-wave">
+                <ellipse cx="22" cy="62" rx="8" ry="6" fill="#8B5A2B"/>
+              </g>
+              <ellipse cx="78" cy="64" rx="7" ry="6" fill="#8B5A2B"/>
+            </svg>
+          </div>
+
+          <!-- Phong bì bấm để mở + dòng gợi ý -->
+          <div class="envelope-section">
+            <div class="envelope-interactive" id="envelopeBox" onclick="openEnvelope()">
+              <div class="flap"></div>
+              <div class="seal">❤️</div>
+              <div class="pocket"></div>
+              
+              <div class="letter-content">
+                <span style="font-family: var(--font-hand); font-size: 26px; color: var(--pastel-pink-deep);">Gửi Mẹ Huyền ❤️</span>
+                <p style="font-size: 14px; font-weight: 800; margin-top: 6px; color: var(--text-dark);">
+                  Mừng ngày Nhà giáo Việt Nam 20/11! 💐
+                </p>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
+                  Con có bất ngờ đặc biệt gửi mẹ nè~ Mẹ bấm nút "Tiếp nè ⬇" ở dưới để xem tiếp nha!
+                </p>
+              </div>
+            </div>
+
+            <div class="envelope-hint" id="envelopeHint">
+              Chạm vào dấu tim để mở thư 💌
+            </div>
+          </div>
+
+          <button class="secret-button" onclick="triggerEasterEgg(event)">
+            🔒 Đừng bấm ạ 🙈
+          </button>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           MÀN 2: BÓNG BAY LỜI CHÚC (ĐÃ CHỈNH BẤM MỚI BUNG LỜI CHÚC)
+           ========================================== -->
+      <section class="screen-stage" id="stage2">
+        <div style="text-align: center; width: 100%;">
+          <div style="display: inline-block; background: #FFE8ED; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; color: #E63946; margin-bottom: 4px;">
+            🎈 Bóng Bay Lời Chúc (<span id="poppedCount">0</span>/6)
+          </div>
+          <p style="font-size: 12.5px; color: var(--text-muted);">
+            Mẹ bấm vỡ từng quả bóng để mở bung lời chúc ra nhé!
+          </p>
+        </div>
+
+        <!-- Bầu trời bóng bay lơ lửng -->
+        <div class="balloon-sky" id="balloonSky"></div>
+
+        <!-- Danh sách lời chúc đã mở ở góc dưới (ban đầu trống rỗng) -->
+        <div style="width: 100%;">
+          <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;" id="openedTitle">
+            💌 Lời chúc đã mở:
+          </div>
+          <div class="opened-wishes-list" id="openedWishesList">
+            <div id="emptyWishNotice" style="text-align: center; font-size: 12px; color: #BAA6AE; padding: 12px;">
+              (Chưa có quả bóng nào được bấm vỡ)
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal bung lời chúc giữa màn hình khi bấm trúng bóng -->
+        <div class="wish-center-overlay" id="wishCenterOverlay" onclick="closeCenterWish()">
+          <div class="wish-center-card" onclick="event.stopPropagation()">
+            <div class="wish-tag-icon" id="wishCardIcon">🌸</div>
+            <div class="zh-text" id="wishCardZh" lang="zh" style="font-size: 20px; font-weight: 900; color: #D90429;">
+              教师节快乐！
+            </div>
+            <span class="pinyin-line" id="wishCardPy" style="font-size: 13px; margin: 4px 0 10px 0;">Jiàoshī jié kuàilè</span>
+            <div id="wishCardVi" style="font-size: 15px; font-weight: 700; color: var(--text-dark); line-height: 1.45;">
+              Chúc mừng Ngày Nhà giáo! Chúc Mẹ luôn rạng rỡ và hạnh phúc bên bục giảng! 💐
+            </div>
+            <button class="pill-btn" style="margin: 18px auto 0 auto; background: var(--pastel-pink-deep); color: white; border: none; padding: 8px 22px; font-size: 13px;" onclick="closeCenterWish()">
+              Nhận lời chúc nè ✨
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           MÀN 3: ALBUM KỶ NIỆM POLAROID
+           ========================================== -->
+      <section class="screen-stage" id="stage3">
+        <div style="text-align: center; width: 100%;">
+          <h2 style="font-size: 18px; font-weight: 900; color: #351C28;">📸 Album Kỷ Niệm (Mẹ Huyền)</h2>
+          <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+            Chạm vào ảnh để lật xem các khoảnh khắc lớp mình nhé! (<span id="photoIndexTxt">1</span>/4)
+          </p>
+        </div>
+
+        <!-- Khung Polaroid chồng lớp scrapbook (render động từ MEDIA_CONFIG) -->
+        <div class="polaroid-deck" id="polaroidDeck" onclick="nextPhoto()"></div>
+
+        <!-- Thumbnails danh sách ảnh để chọn nhanh -->
+        <div class="photo-thumb-strip" id="photoThumbs"></div>
+      </section>
+
+      <!-- ==========================================
+           MÀN 4: THẺ BÀI SSR HOLOGRAPHIC (RÕ NÉT, BỎ ĐIỂM YẾU, ĐỔI DANH HIỆU)
+           ========================================== -->
+      <section class="screen-stage" id="stage4">
+        <div style="text-align: center; width: 100%;">
+          <h2 style="font-size: 18px; font-weight: 900; color: #351C28;">✨ Thẻ Bài Giảng Viên SSR</h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+            Rê tay hoặc nghiêng máy để ngắm thẻ bài đổi màu ánh kim nha Mẹ! 📱💫
+          </p>
+        </div>
+
+        <div class="holo-deck-stage">
+          <div class="ssr-holo-card" id="holoCard">
+            <div class="holo-rainbow-glare" id="holoGlare"></div>
+            
+            <div class="card-layout">
+              <!-- Top row: SSR Badge & HP -->
+              <div class="card-top-row">
+                <span class="badge-ssr">✨ SSR SIÊU CẤP</span>
+                <span class="badge-hp">HP 9999 ❤️</span>
+              </div>
+
+              <!-- Teacher Portrait Photo (Cấu hình từ MEDIA_CONFIG.ssrCard.portrait) -->
+              <div class="card-portrait-box">
+                <img id="ssrPortraitImg" src="" alt="Cô Hoàng Thị Thái Huyền">
+              </div>
+
+              <!-- Name & New Honor Title -->
+              <div class="card-title-group">
+                <div class="card-teacher-name">
+                  <span class="zh-text" lang="zh" style="color: #D90429;">老师</span> · Hoàng Thị Thái Huyền
+                </div>
+                <div class="card-honor-title">
+                  ☀️ Giảng viên đáng yêu nhất hệ mặt trời
+                </div>
+              </div>
+
+              <!-- Skills Board (Đã bỏ hoàn toàn phần điểm yếu theo yêu cầu) -->
+              <div class="card-skills-board">
+                <div class="skill-row">
+                  <div class="skill-icon">☀️</div>
+                  <div>
+                    <strong>Chiêu 1:</strong> <span class="zh-text" lang="zh">微笑 (Wēixiào)</span> - Nụ cười tỏa nắng sưởi ấm giảng đường
+                  </div>
+                </div>
+                <div class="skill-row">
+                  <div class="skill-icon">📖</div>
+                  <div>
+                    <strong>Chiêu 2:</strong> Truyền Thụ Tuyệt Kỹ - Giảng đến khi ai cũng hiểu & yêu tiếng Trung
+                  </div>
+                </div>
+                <div class="skill-row">
+                  <div class="skill-icon">⚡</div>
+                  <div>
+                    <strong>Hệ:</strong> Hài hước vô đối & Truyền cảm hứng bất tận
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           MÀN 5: CUỘC GỌI VIDEO & TRI ÂN
+           ========================================== -->
+      <section class="screen-stage" id="stage5">
+        
+        <!-- Khung Cuộc Gọi Đến -->
+        <div class="call-container" id="callIncomingView">
+          <div class="avatar-incoming">
+            <img id="callerAvatarImg" src="avt.jpg" alt="Con yêu của mẹ - Sơn">
+          </div>
+
+          <h2 style="font-size: 21px; font-weight: 800; color: #351C28;">
+            Con yêu của mẹ 📹 Sơn
+          </h2>
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">
+            Cuộc gọi video đến...
+          </p>
+
+          <div class="call-btn-row">
+            <button class="btn-circle-action btn-call-decline" id="btnDecline" onmouseover="dodgeDecline()" onclick="dodgeDecline()">
+              ✕
+            </button>
+            <button class="btn-circle-action btn-call-accept" onclick="acceptCall()">
+              📹
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (Đầy đủ Tiếp / Quay lại) -->
+    <footer class="bottom-bar">
+      <button class="btn-nav-prev" id="btnPrev" onclick="navigateScreen(-1)">
+        <span>⬅</span> <span>Quay lại</span>
+      </button>
+
+      <button class="btn-nav-next pulse-hint" id="btnNext" onclick="navigateScreen(1)">
+        <span id="nextBtnText">Tiếp nè</span> <span id="nextBtnIcon">⬇</span>
+      </button>
+    </footer>
+
+    <!-- Khung Phòng Video Call Khi Nghe Máy (Giao diện cuộc gọi video thật, z-index: 120 tràn khung máy) -->
+    <div class="active-video-room" id="activeVideoRoom">
+      <video id="tributeVideo" class="video-mock-bg" src="videochuc.mp4" playsinline webkit-playsinline preload="auto"></video>
+
+      <!-- Thanh trạng thái trên cùng giống cuộc gọi video thật -->
+      <div class="video-call-topbar">
+        <div class="caller-live-pill">
+          <div class="caller-mini-avt">
+            <img id="callerMiniAvtImg" src="avt.jpg" alt="Sơn">
+          </div>
+          <div class="caller-live-meta">
+            <span class="caller-live-name">Con yêu của mẹ ❤️ Sơn</span>
+            <span class="caller-live-status">
+              <span class="rec-dot"></span>
+              <span id="callStatusText">Đang gọi</span>
+              <span>•</span>
+              <span id="callTimer">00:00</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="call-signal-badge" aria-label="Tín hiệu HD">
+          <span class="signal-bar" style="height: 5px;"></span>
+          <span class="signal-bar" style="height: 8px;"></span>
+          <span class="signal-bar" style="height: 11px;"></span>
+          <span class="signal-bar" style="height: 14px;"></span>
+          <span class="signal-label">HD</span>
+        </div>
+      </div>
+
+      <!-- Khung camera phụ (Picture-in-Picture góc trên phải) -->
+      <div class="call-pip-preview" id="callPipPreview">
+        <img id="callPipImg" src="" alt="Camera của Mẹ">
+        <div class="call-pip-off-overlay">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10"/>
+            <line x1="1" y1="1" x2="23" y2="23"/>
+          </svg>
+          <span>Cam đã tắt</span>
+        </div>
+        <div class="call-pip-tag">Mẹ ❤️</div>
+      </div>
+
+      <!-- Thanh điều khiển cuộc gọi video phía dưới -->
+      <div class="video-call-bottom-area">
+        <button class="call-wish-shortcut" onclick="triggerCelebration()">
+          <span>🎉</span> <span>Xem lời chúc kết thúc nè Mẹ!</span>
+        </button>
+
+        <div class="video-call-dock">
+          <div class="call-ctrl-item">
+            <button class="call-ctrl-btn" id="btnCallMute" onclick="toggleCallMute()" aria-label="Bật/tắt âm thanh">
+              <svg id="iconCallSoundOn" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+              <svg id="iconCallSoundOff" style="display: none;" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+              </svg>
+            </button>
+            <span class="call-ctrl-label" id="labelCallMute">Loa</span>
+          </div>
+
+          <div class="call-ctrl-item">
+            <button class="call-ctrl-btn" id="btnCallCam" onclick="toggleCallCamera()" aria-label="Bật/tắt camera">
+              <svg id="iconCallCamOn" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="23 7 16 12 23 17 23 7"/>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+              </svg>
+              <svg id="iconCallCamOff" style="display: none;" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+            <span class="call-ctrl-label" id="labelCallCam">Camera</span>
+          </div>
+
+          <div class="call-ctrl-item">
+            <button class="call-ctrl-btn btn-heart-react" onclick="sendCallHeart()" aria-label="Thả tim">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="#FF758F" stroke="#FF758F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+            <span class="call-ctrl-label">Thả tim</span>
+          </div>
+
+          <div class="call-ctrl-item">
+            <button class="call-ctrl-btn btn-hangup" onclick="endVideoCall()" aria-label="Kết thúc cuộc gọi">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(135deg);">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </button>
+            <span class="call-ctrl-label">Kết thúc</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lời chúc kết thúc trang trọng -->
+      <div class="final-tribute-overlay" id="finalOverlay">
+        <div style="font-size: 44px; margin-bottom: 8px;">🌷✨💐</div>
+        
+        <h3 class="zh-text" lang="zh" style="font-size: 22px; font-weight: 900; color: #D90429;">
+          老师，节日快乐，天天开心！
+        </h3>
+        <span class="pinyin-line" style="font-size: 13px; margin: 4px 0 14px 0;">Lǎoshī, jiérì kuàilè, tiāntiān kāixīn!</span>
+        
+        <p style="font-size: 15px; font-weight: 700; line-height: 1.55; color: var(--text-dark);">
+          “Chúc mẹ 20/11 thật vui, thật xinh, và luôn dồi dào sức khỏe! 🌸 Cảm ơn mẹ đã luôn truyền cảm hứng và tình yêu tiếng Trung cho chúng con!”
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 11px; width: 100%; max-width: 250px; margin-top: 22px;">
+          <button class="pill-btn" style="justify-content: center; padding: 12px; font-size: 14px; background: white;" onclick="replayCelebration()">
+            🔄 Xem lại video
+          </button>
+          
+          <button class="pill-btn" style="justify-content: center; padding: 12px; font-size: 14px; background: linear-gradient(135deg, #FF8FA3, #FF4D6D); color: white; border: none; box-shadow: 0 4px 16px rgba(255, 77, 109, 0.4);" onclick="openThankYouModal()">
+            💌 Gửi lại lời nhắn cho con
+          </button>
+
+          <button class="pill-btn" style="justify-content: center; padding: 10px; font-size: 13px; background: #FFF3B0; border-color: rgba(226, 166, 0, 0.35); color: #4A3E3D;" onclick="jumpToScreen(0)">
+            🏠 Xem lại từ đầu 🔄
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Cảm Ơn Khi Mẹ Gửi Lại -->
+    <div class="thankyou-modal-backdrop" id="thankyouModal" onclick="closeThankYouModal(event)">
+      <div class="thankyou-box" onclick="event.stopPropagation()">
+        <div style="font-size: 48px; margin-bottom: 8px;">😭💖✨</div>
+        <h4 style="font-size: 18px; font-weight: 900; color: #351C28;">
+          Mẹ đã nhận lời chúc!
+        </h4>
+        <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
+          Mẹ đã nhận trọn vẹn tình cảm của chúng con rồi ạ! Con chúc Mẹ có một ngày 20/11 thật hạnh phúc và ý nghĩa bên gia đình và học trò! 🥰💐
+        </p>
+        <button class="pill-btn" style="margin: 20px auto 0 auto; background: var(--pastel-pink-deep); color: white; border: none; padding: 10px 28px; font-size: 14px;" onclick="closeThankYouModal()">
+          Dạ con biết rùi ạ ❤️
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Nhạc nền cục bộ (tự động phát) & Nhạc chuông cuộc gọi đến -->
+  <audio id="bgmAudio" src="bgm.mp3" loop autoplay preload="auto"></audio>
+  <audio id="ringtoneAudio" src="ringtone.mp3" loop preload="auto"></audio>
+
+  <script>
+    /**
+     * ==============================================================
+     * CẤU HÌNH ĐƯỜNG DẪN ẢNH (MÀN 3 & MÀN 4)
+     * Chỉ cần thay các đường dẫn bên dưới bằng file ảnh cục bộ trong thư mục
+     * Ví dụ: "images/anh1.jpg", "anh-co-huyen.jpg", ...
+     * ==============================================================
+     */
+    const MEDIA_CONFIG = {
+      // Màn 3 - Album Polaroid kỷ niệm (4 ảnh)
+      album: {
+        // Ảnh 1: Lần đầu tiên mẹ và con gặp nhau
+        photo1: "https://lh3.googleusercontent.com/aida-public/AB6AXuBat4YWPWyR_xPlNK3qKJyGRlZxCr6jKSHUNKab32SyVxRAjGheb7f-3liZlUSO1c8wqTEOfzDNx-vwumpcce7_YpOv87hHE7Ztb6O2a2xJAk_WH2YMuzzePeEHfJMpgV-0FPn0ZVdw0N6YlreZRaf1BPFH2GnAa1dnDLJreeY-LdsKSs4uHGJWgUBS03U7UuT8hPkvbgJHFT1II3g-7Jwa_Ma9IFU4YiqRpCpLtrYA2-OdzwyhWHcP",
+        // Ảnh 2: Cùng nhau viết thư pháp
+        photo2: "https://lh3.googleusercontent.com/aida-public/AB6AXuC32-PcMtN5mOgps6Sow9Kr0RWD-TDee_FiSs-gz6aTtSCQ_ikKMHNaZjzjgtRME6z9_xGjY1HQLiLfgUPKYHFyYUOcp2NKCD8wB_youb_s2X3W_yjBLlww5U6R4ME0tmxk7ST2-ZdL7RXABjhQVbuPvgNnr57BWR5bx4XgsLRZMhkf9xd-BaKeydD24yM5Lkk730ZGVPzQTty9TKQ0wZbWyRQZG1qZ3MLqC0ajFPwKycSywQSRL-wK",
+        // Ảnh 3: Sự bá khí của mẹ con mình
+        photo3: "https://lh3.googleusercontent.com/aida-public/AB6AXuCx0iVB6SumpI47nk9W_z0vF47Ga5Bsr9SVYIV1aaRL4Rm4rnZAkazn4A1SVPJ-gTwfEWJxq-tmvAJeD_k8nFZiIGQfm9UafN3WJMekGBrogbrWbNdpBV4sEAQsozJx7tL0snPkKfIze6DQ0vsvndrsd7_eLrs4eOzbwdScEz92nY3wLZUkKc2tCRR11JmakkHPGVPKg-flU0DN2VOncRPu8B-WJgqS3WWtV7aFa9yBe2eQT32892TE",
+        // Ảnh 4: Chân dung Cô Hoàng Thị Thái Huyền rạng rỡ
+        photo4: "https://lh3.googleusercontent.com/aida-public/AB6AXuBxoJLvRjBxcfMAysDAgzmrVvKXlIbRV4Hf1q9EnTzlCAw_KLEMA0RHdxnGM9u_mU29pJLgCnvZHieBzzON-usp0GXCaWs9dCjs2aHrezCLZzwV6r6U_LOsS_IccLzlJhPnuq_pesyp6PbRgYY-uOPsiRWDqyOTh5Tiqruv0Iphooxo8JHJCxQ13uDiEXEqYrzEv082IoTmYXaJpQGF1IgihdakMKiOhwnYwgMQYWbVR469v9HIxYci"
+      },
+      // Màn 4 - Thẻ bài Giảng viên SSR Holographic
+      ssrCard: {
+        // Ảnh chân dung chính của Cô Hoàng Thị Thái Huyền trên thẻ SSR
+        portrait: "https://lh3.googleusercontent.com/aida-public/AB6AXuBxoJLvRjBxcfMAysDAgzmrVvKXlIbRV4Hf1q9EnTzlCAw_KLEMA0RHdxnGM9u_mU29pJLgCnvZHieBzzON-usp0GXCaWs9dCjs2aHrezCLZzwV6r6U_LOsS_IccLzlJhPnuq_pesyp6PbRgYY-uOPsiRWDqyOTh5Tiqruv0Iphooxo8JHJCxQ13uDiEXEqYrzEv082IoTmYXaJpQGF1IgihdakMKiOhwnYwgMQYWbVR469v9HIxYci",
+        // Vị trí căn khung ảnh chân dung (chỉnh % dọc nếu muốn lấy cao/thấp hơn, VD: 'center 40%', 'center 50%')
+        portraitPosition: "center 45%"
+      },
+      // Màn 5 - Ảnh đại diện người gọi đến (Sơn)
+      videoCall: {
+        callerAvatar: "avt.jpg"
+      }
+    };
+
+    /**
+     * DỮ LIỆU BÓNG BAY (MÀN 2)
+     */
+    const BALLOON_DATA = [
+      { zh: "教师节快乐！", py: "Jiàoshī jié kuàilè", vi: "Chúc mừng Ngày Nhà giáo! Chúc Mẹ luôn rạng rỡ và tràn đầy niềm vui bên bục giảng! 💐", color: "#FF9FB2", icon: "🌸" },
+      { zh: "老师辛苦了！", py: "Lǎoshī xīnkǔ le", vi: "Cô giáo của chúng con vất vả nhiều rồi ạ! Mẹ hãy nghỉ ngơi và uống tách trà ấm thật thư thái nha! ☕", color: "#A8DADC", icon: "🍵" },
+      { zh: "老师最美！", py: "Lǎoshī zuì měi", vi: "Mẹ lúc nào cũng là cô giáo xinh đẹp và ấm áp nhất trong lòng chúng con! Vũ trụ này không ai đáng yêu bằng Mẹ! ✨", color: "#FFD166", icon: "👑" },
+      { zh: "笑一笑，十年少！", py: "Xiào yi xiào, shí nián shào", vi: "Cười một cái là trẻ ra 10 tuổi liền á Mẹ! Lúc nào cũng giữ nụ cười tỏa nắng này Mẹ nhé! 😆", color: "#C8E6C9", icon: "☀️" },
+      { zh: "超有趣的老师", py: "Chāo yǒuqù de lǎoshī", vi: "Mẹ là giảng viên hài hước và tâm lý nhất trần đời con từng gặp! Tiết học của Mẹ là số 1 ạ! ⚡", color: "#E1D4F9", icon: "🎉" },
+      { zh: "天天开心！", py: "Tiāntiān kāixīn", vi: "Chúc Mẹ mỗi ngày thức dậy đều ngập tràn niềm vui, sức khỏe dồi dào và luôn yêu thương chúng con! 🌷", color: "#FFB5A7", icon: "🌷" }
+    ];
+
+    /**
+     * DỮ LIỆU 4 ẢNH ALBUM KỶ NIỆM (MÀN 3 - GÓC XOAY SCRAPBOOK -2deg ĐẾN +2.5deg)
+     */
+    const PHOTO_ALBUM = [
+      {
+        url: MEDIA_CONFIG.album.photo1,
+        caption: "Lần đầu tiên mẹ và con gặp nhau — mở đầu cho thật nhiều kỷ niệm ấm áp 🌸",
+        rot: "-1.8deg",
+        tapeClass: "tape-pink"
+      },
+      {
+        url: MEDIA_CONFIG.album.photo2,
+        caption: "Cùng nhau viết thư pháp — gửi trọn 'Phúc - Đại Cát - Bình An' đến Mẹ yêu quý 🖌️🧧✨",
+        rot: "2.2deg",
+        tapeClass: "tape-lilac"
+      },
+      {
+        url: MEDIA_CONFIG.album.photo3,
+        caption: "Sự bá khí của mẹ con mình — thần thái đỉnh cao không ai sánh bằng 😎📸✨",
+        rot: "-1.5deg",
+        tapeClass: "tape-mint"
+      },
+      {
+        url: MEDIA_CONFIG.album.photo4,
+        caption: "Cô giáo Hoàng Thị Thái Huyền - Giảng viên truyền cảm hứng và đáng yêu nhất hệ mặt trời ☀️",
+        rot: "2.4deg",
+        tapeClass: "tape-butter"
+      }
+    ];
+
+    // Trạng thái ứng dụng
+    let currentStep = 0;
+    let poppedCount = 0;
+    let currentPhotoIdx = 0;
+    let isPhotoFlipping = false;
+    let albumBuilt = false;
+    let holoInitialized = false;
+    let audioCtx = null;
+    let callTimerId = null;
+    let callSec = 0;
+    let ringtoneIntervalId = null;
+    let vibrateIntervalId = null;
+    let activeRingtoneNodes = [];
+    let bgmUserPaused = false;
+    let bgmPausedForCall = false;
+    let lastHoloSfxTime = 0;
+
+    // Phần tử media cục bộ
+    const bgmAudio = document.getElementById('bgmAudio');
+    const ringtoneAudio = document.getElementById('ringtoneAudio');
+    const tributeVideo = document.getElementById('tributeVideo');
+    const ssrPortraitImg = document.getElementById('ssrPortraitImg');
+
+    if (bgmAudio) {
+      bgmAudio.volume = 0.35;
+      bgmAudio.addEventListener('play', () => syncBgmButton(true));
+      bgmAudio.addEventListener('pause', () => syncBgmButton(false));
+      bgmAudio.addEventListener('ended', () => syncBgmButton(false));
+    }
+
+    if (ringtoneAudio) {
+      ringtoneAudio.volume = 0.75;
+    }
+
+    if (ssrPortraitImg) {
+      ssrPortraitImg.src = MEDIA_CONFIG.ssrCard.portrait;
+      if (MEDIA_CONFIG.ssrCard.portraitPosition) {
+        ssrPortraitImg.style.objectPosition = MEDIA_CONFIG.ssrCard.portraitPosition;
+      }
+    }
+
+    // Gán ảnh đại diện người gọi đến (avt.jpg) và ảnh camera phụ PiP của Mẹ
+    const callerAvatarImg = document.getElementById('callerAvatarImg');
+    const callerMiniAvtImg = document.getElementById('callerMiniAvtImg');
+    const callPipImg = document.getElementById('callPipImg');
+    if (callerAvatarImg) callerAvatarImg.src = MEDIA_CONFIG.videoCall.callerAvatar;
+    if (callerMiniAvtImg) callerMiniAvtImg.src = MEDIA_CONFIG.videoCall.callerAvatar;
+    if (callPipImg) callPipImg.src = MEDIA_CONFIG.ssrCard.portrait;
+
+    if (tributeVideo) {
+      tributeVideo.onended = () => {
+        triggerCelebration();
+      };
+    }
+
+    // ==============================================================
+    // HỆ THỐNG HIỆU ỨNG ÂM THANH TƯƠNG TÁC (WEB AUDIO API - SFX)
+    // ==============================================================
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        audioCtx = new AudioCtx();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    // 1. Tiếng pop nhẹ, trong trẻo khi bấm nút / chuyển màn
+    function playButtonPop(freq = 640) {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq * 0.82, now);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.25, now + 0.045);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.9, now + 0.11);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.16, now + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.13);
+      } catch (e) {}
+    }
+
+    // 2. Tiếng chuông ngân nhẹ (chime) khi mở phong bì Màn 1
+    function playEnvelopeChime() {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const notes = [1046.5, 1318.5, 1567.98, 1975.53, 2093.0]; // C6 E6 G6 B6 C7
+
+        notes.forEach((freq, idx) => {
+          const start = now + idx * 0.065;
+          const osc = ctx.createOscillator();
+          const shimmer = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'triangle';
+          shimmer.type = 'sine';
+          osc.frequency.setValueAtTime(freq, start);
+          shimmer.frequency.setValueAtTime(freq * 2, start);
+
+          gain.gain.setValueAtTime(0.001, start);
+          gain.gain.linearRampToValueAtTime(0.11, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0008, start + 0.65);
+
+          const shimmerGain = ctx.createGain();
+          shimmerGain.gain.setValueAtTime(0.03, start);
+          shimmerGain.gain.exponentialRampToValueAtTime(0.0005, start + 0.35);
+
+          osc.connect(gain);
+          shimmer.connect(shimmerGain);
+          shimmerGain.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(start);
+          shimmer.start(start);
+          osc.stop(start + 0.68);
+          shimmer.stop(start + 0.4);
+        });
+      } catch (e) {}
+    }
+
+    // 3. Tiếng nổ bốp giòn, vui tai khi bấm vỡ bóng bay Màn 2
+    function playBalloonPop(idx = 0) {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        // Lớp tiếng nổ giòn (filtered white noise)
+        const bufferSize = Math.floor(ctx.sampleRate * 0.065);
+        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2.2);
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = noiseBuffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1400 + idx * 120, now);
+        filter.Q.setValueAtTime(1.4, now);
+
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.32, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+
+        noise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(ctx.destination);
+        noise.start(now);
+
+        // Lớp tiếng "bốp" trầm nảy
+        const thump = ctx.createOscillator();
+        const thumpGain = ctx.createGain();
+        thump.type = 'sine';
+        thump.frequency.setValueAtTime(420 + idx * 35, now);
+        thump.frequency.exponentialRampToValueAtTime(85, now + 0.075);
+        thumpGain.gain.setValueAtTime(0.28, now);
+        thumpGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+        thump.connect(thumpGain);
+        thumpGain.connect(ctx.destination);
+        thump.start(now);
+        thump.stop(now + 0.085);
+
+        // Tiếng lấp lánh vui tai ngay sau khi vỡ
+        const ping = ctx.createOscillator();
+        const pingGain = ctx.createGain();
+        ping.type = 'triangle';
+        ping.frequency.setValueAtTime(980 + idx * 90, now + 0.03);
+        ping.frequency.exponentialRampToValueAtTime(1380 + idx * 100, now + 0.14);
+        pingGain.gain.setValueAtTime(0.001, now + 0.03);
+        pingGain.gain.linearRampToValueAtTime(0.1, now + 0.045);
+        pingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+        ping.connect(pingGain);
+        pingGain.connect(ctx.destination);
+        ping.start(now + 0.03);
+        ping.stop(now + 0.19);
+      } catch (e) {}
+    }
+
+    // 4. Tiếng lật giấy / tách nhẹ khi chuyển ảnh Polaroid Màn 3
+    function playPhotoFlip() {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        // Tiếng lướt giấy nhẹ
+        const swishLen = Math.floor(ctx.sampleRate * 0.09);
+        const swishBuf = ctx.createBuffer(1, swishLen, ctx.sampleRate);
+        const output = swishBuf.getChannelData(0);
+        for (let i = 0; i < swishLen; i++) {
+          const env = Math.sin((i / swishLen) * Math.PI);
+          output[i] = (Math.random() * 2 - 1) * env;
+        }
+        const swish = ctx.createBufferSource();
+        swish.buffer = swishBuf;
+
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.setValueAtTime(1700, now);
+        bp.frequency.exponentialRampToValueAtTime(3400, now + 0.085);
+        bp.Q.setValueAtTime(1.8, now);
+
+        const swishGain = ctx.createGain();
+        swishGain.gain.setValueAtTime(0.11, now);
+        swishGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+        swish.connect(bp);
+        bp.connect(swishGain);
+        swishGain.connect(ctx.destination);
+        swish.start(now);
+
+        // Tiếng tách nhẹ như máy ảnh Polaroid / đặt ảnh
+        const click = ctx.createOscillator();
+        const clickGain = ctx.createGain();
+        click.type = 'triangle';
+        click.frequency.setValueAtTime(980, now + 0.025);
+        click.frequency.exponentialRampToValueAtTime(280, now + 0.055);
+        clickGain.gain.setValueAtTime(0.09, now + 0.025);
+        clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+        click.connect(clickGain);
+        clickGain.connect(ctx.destination);
+        click.start(now + 0.025);
+        click.stop(now + 0.065);
+      } catch (e) {}
+    }
+
+    // 5. Nhạc chuông cuộc gọi đến bằng file ringtone.mp3 + hiệu ứng rung (haptic + visual)
+    function playRingtoneFallbackPhrase() {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const pattern = [
+          { freq: 659.25, offset: 0.00, dur: 0.22 },
+          { freq: 783.99, offset: 0.13, dur: 0.22 },
+          { freq: 1046.5, offset: 0.26, dur: 0.38 },
+          { freq: 659.25, offset: 0.72, dur: 0.22 },
+          { freq: 783.99, offset: 0.85, dur: 0.22 },
+          { freq: 1046.5, offset: 0.98, dur: 0.42 }
+        ];
+
+        pattern.forEach(({ freq, offset, dur }) => {
+          const start = now + offset;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, start);
+
+          gain.gain.setValueAtTime(0.0001, start);
+          gain.gain.linearRampToValueAtTime(0.095, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0008, start + dur);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + dur + 0.02);
+
+          activeRingtoneNodes.push({ osc, gain });
+          osc.onended = () => {
+            activeRingtoneNodes = activeRingtoneNodes.filter(n => n.osc !== osc);
+          };
+        });
+      } catch (e) {}
+    }
+
+    function setRingingVisual(active) {
+      const phone = document.getElementById('phone-frame');
+      const incoming = document.getElementById('callIncomingView');
+      if (phone) phone.classList.toggle('ringing', active);
+      if (incoming) incoming.classList.toggle('ringing', active);
+    }
+
+    function startVibrationLoop() {
+      stopVibrationLoop();
+      const pulse = () => {
+        try {
+          if (navigator.vibrate) {
+            navigator.vibrate([300, 160, 300, 740]);
+          }
+        } catch (e) {}
+      };
+      pulse();
+      vibrateIntervalId = setInterval(() => {
+        if (currentStep !== 4 || document.getElementById('activeVideoRoom').classList.contains('connected')) {
+          stopVibrationLoop();
+          return;
+        }
+        pulse();
+      }, 1500);
+    }
+
+    function stopVibrationLoop() {
+      if (vibrateIntervalId) {
+        clearInterval(vibrateIntervalId);
+        vibrateIntervalId = null;
+      }
+      try {
+        if (navigator.vibrate) navigator.vibrate(0);
+      } catch (e) {}
+    }
+
+    function startRingtone() {
+      stopRingtone();
+
+      // Tạm dừng nhạc nền khi đổ chuông để nghe rõ ringtone.mp3
+      if (bgmAudio && !bgmAudio.paused) {
+        bgmPausedForCall = true;
+        pauseBgm();
+      }
+
+      // Bật hiệu ứng rung khung máy + rung thiết bị di động
+      setRingingVisual(true);
+      startVibrationLoop();
+
+      // Phát file nhạc chuông ringtone.mp3 (fallback sang Web Audio nếu bị lỗi)
+      if (ringtoneAudio) {
+        ringtoneAudio.currentTime = 0;
+        ringtoneAudio.volume = 0.75;
+        ringtoneAudio.play().catch(() => {
+          playRingtoneFallbackPhrase();
+          ringtoneIntervalId = setInterval(() => {
+            if (currentStep !== 4 || document.getElementById('activeVideoRoom').classList.contains('connected')) {
+              stopRingtone();
+              return;
+            }
+            playRingtoneFallbackPhrase();
+          }, 2600);
+        });
+      }
+    }
+
+    function stopRingtone() {
+      setRingingVisual(false);
+      stopVibrationLoop();
+
+      if (ringtoneAudio) {
+        ringtoneAudio.pause();
+        ringtoneAudio.currentTime = 0;
+      }
+      if (ringtoneIntervalId) {
+        clearInterval(ringtoneIntervalId);
+        ringtoneIntervalId = null;
+      }
+      if (audioCtx && activeRingtoneNodes.length > 0) {
+        const now = audioCtx.currentTime;
+        activeRingtoneNodes.forEach(({ osc, gain }) => {
+          try {
+            gain.gain.cancelScheduledValues(now);
+            gain.gain.setTargetAtTime(0.0001, now, 0.015);
+            osc.stop(now + 0.05);
+          } catch (e) {}
+        });
+      }
+      activeRingtoneNodes = [];
+    }
+
+    // 7. Các hiệu ứng âm thanh tương tác bổ sung (chạm tim, chọc gấu, trêu đùa, lướt màn, ánh kim SSR)
+    function playTapSparkle() {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const baseFreq = 1150 + Math.random() * 550;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(baseFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.35, now + 0.09);
+
+        gain.gain.setValueAtTime(0.0008, now);
+        gain.gain.linearRampToValueAtTime(0.045, now + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0005, now + 0.14);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      } catch (e) {}
+    }
+
+    function playScreenSwipe() {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(360, now);
+        osc.frequency.exponentialRampToValueAtTime(760, now + 0.11);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.025);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      } catch (e) {}
+    }
+
+    function playBearGiggle(isShy = false) {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const notes = isShy ? [660, 880, 990, 1320] : [520, 740];
+        notes.forEach((f, idx) => {
+          const start = now + idx * 0.07;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, start);
+          osc.frequency.exponentialRampToValueAtTime(f * 1.18, start + 0.065);
+
+          gain.gain.setValueAtTime(0.001, start);
+          gain.gain.linearRampToValueAtTime(0.11, start + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.11);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.12);
+        });
+      } catch (e) {}
+    }
+
+    function playMischiefSfx() {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(280, now);
+        osc.frequency.exponentialRampToValueAtTime(620, now + 0.09);
+        osc.frequency.exponentialRampToValueAtTime(420, now + 0.16);
+        osc.frequency.exponentialRampToValueAtTime(840, now + 0.24);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.14, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.27);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.28);
+      } catch (e) {}
+    }
+
+    function playDodgeWhoosh() {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(680, now);
+        osc.frequency.exponentialRampToValueAtTime(240, now + 0.11);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.14, now + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.14);
+      } catch (e) {}
+    }
+
+    function playHoloShimmer() {
+      const nowMs = Date.now();
+      if (nowMs - lastHoloSfxTime < 220) return;
+      lastHoloSfxTime = nowMs;
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const freq = 1600 + Math.random() * 800;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.15, now + 0.1);
+
+        gain.gain.setValueAtTime(0.0005, now);
+        gain.gain.linearRampToValueAtTime(0.024, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0004, now + 0.13);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.14);
+      } catch (e) {}
+    }
+
+    // 6. Tiếng chuông hợp âm chúc mừng (fanfare) khi mở hết 6 bóng hoặc hiện lời chúc cuối
+    function playCelebrationFanfare() {
+      try {
+        const ctx = initAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        // Nốt dẫn arpeggio tươi sáng
+        const arpeggio = [
+          { freq: 523.25, t: 0.00, dur: 0.28 }, // C5
+          { freq: 659.25, t: 0.10, dur: 0.28 }, // E5
+          { freq: 783.99, t: 0.20, dur: 0.30 }, // G5
+          { freq: 1046.5, t: 0.32, dur: 0.75 }  // C6
+        ];
+
+        arpeggio.forEach(({ freq, t, dur }) => {
+          const start = now + t;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, start);
+
+          gain.gain.setValueAtTime(0.001, start);
+          gain.gain.linearRampToValueAtTime(0.14, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0008, start + dur);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + dur + 0.03);
+        });
+
+        // Hợp âm chuông kết ngân vang ấm áp (Cmaj9)
+        const bloomNotes = [523.25, 659.25, 783.99, 987.77, 1318.5];
+        bloomNotes.forEach((freq, idx) => {
+          const start = now + 0.34 + idx * 0.025;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, start);
+
+          gain.gain.setValueAtTime(0.001, start);
+          gain.gain.linearRampToValueAtTime(0.07, start + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0008, start + 1.15);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 1.2);
+        });
+      } catch (e) {}
+    }
+
+    // ==============================================================
+    // NHẠC NỀN CỤC BỘ (bgm.mp3) - TỰ ĐỘNG PHÁT & ĐỒNG BỘ NÚT LOFI
+    // ==============================================================
+    function syncBgmButton(isPlaying) {
+      const btn = document.getElementById('btnToggleBgm');
+      const emoji = document.getElementById('bgmEmoji');
+      if (!btn || !emoji) return;
+      btn.classList.toggle('active', isPlaying);
+      emoji.textContent = isPlaying ? '🎶' : '🎵';
+    }
+
+    function pauseBgm() {
+      if (bgmAudio && !bgmAudio.paused) {
+        bgmAudio.pause();
+      }
+      syncBgmButton(false);
+    }
+
+    function tryAutoplayBgm() {
+      if (!bgmAudio || bgmUserPaused) return;
+      if (currentStep === 4 || document.getElementById('activeVideoRoom').classList.contains('connected')) return;
+      bgmAudio.volume = 0.35;
+      if (!bgmAudio.paused) {
+        syncBgmButton(true);
+        return;
+      }
+      bgmAudio.play()
+        .then(() => {
+          syncBgmButton(true);
+          removeAutoplayUnlockListeners();
+        })
+        .catch(() => {
+          syncBgmButton(false);
+        });
+    }
+
+    function unlockAudioOnFirstGesture(e) {
+      initAudio();
+      // Nếu người dùng bấm thẳng vào nút tắt/bật Lofi thì để toggleBgm xử lý
+      if (e && e.target && e.target.closest && e.target.closest('#btnToggleBgm')) {
+        removeAutoplayUnlockListeners();
+        return;
+      }
+      tryAutoplayBgm();
+    }
+
+    function removeAutoplayUnlockListeners() {
+      ['pointerdown', 'touchstart', 'click', 'keydown'].forEach((evt) => {
+        document.removeEventListener(evt, unlockAudioOnFirstGesture, true);
+      });
+    }
+
+    ['pointerdown', 'touchstart', 'click', 'keydown'].forEach((evt) => {
+      document.addEventListener(evt, unlockAudioOnFirstGesture, { capture: true, passive: true });
+    });
+
+    // Thử tự động phát ngay khi tải trang
+    window.addEventListener('DOMContentLoaded', tryAutoplayBgm);
+    tryAutoplayBgm();
+
+    function toggleBgm() {
+      playButtonPop(680);
+      if (!bgmAudio) return;
+      bgmAudio.volume = 0.35;
+
+      if (bgmAudio.paused) {
+        bgmUserPaused = false;
+        bgmPausedForCall = false;
+        bgmAudio.play()
+          .then(() => syncBgmButton(true))
+          .catch(() => syncBgmButton(false));
+      } else {
+        bgmUserPaused = true;
+        bgmPausedForCall = false;
+        bgmAudio.pause();
+        syncBgmButton(false);
+      }
+    }
+
+    function togglePinyin() {
+      document.body.classList.toggle('hide-pinyin');
+      const hidden = document.body.classList.contains('hide-pinyin');
+      document.getElementById('pinyinLabel').textContent = hidden ? 'Hiện Pinyin' : 'Pinyin';
+      playButtonPop(700);
+    }
+
+    // Hiệu ứng hạt tim + tiếng lấp lánh nhẹ khi chạm màn hình
+    const tapIcons = ['❤️', '✨', '🌸', '💖', '⭐', '🌷'];
+    document.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('button')) return;
+      if (!e.target.closest('.balloon-item') && !e.target.closest('.envelope-interactive') && !e.target.closest('.polaroid-deck') && !e.target.closest('.mascot-wrap')) {
+        playTapSparkle();
+      }
+      const p = document.createElement('div');
+      p.className = 'tap-sparkle';
+      p.textContent = tapIcons[Math.floor(Math.random() * tapIcons.length)];
+      p.style.left = e.clientX + 'px';
+      p.style.top = e.clientY + 'px';
+      p.style.setProperty('--dx', (Math.random() - 0.5) * 60 + 'px');
+      p.style.setProperty('--dy', -(Math.random() * 50 + 30) + 'px');
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 800);
+    });
+
+    // ==============================================================
+    // ĐIỀU HƯỚNG GIỮA 5 MÀN HÌNH (0 -> 4)
+    // ==============================================================
+    function clearCallTimer() {
+      if (callTimerId) {
+        clearInterval(callTimerId);
+        callTimerId = null;
+      }
+    }
+
+    function cleanupStage5Media() {
+      stopRingtone();
+      clearCallTimer();
+      if (tributeVideo) {
+        tributeVideo.pause();
+      }
+      document.getElementById('activeVideoRoom').classList.remove('connected');
+      document.getElementById('finalOverlay').classList.remove('show');
+    }
+
+    function jumpToScreen(step, silentPop = false) {
+      if (step < 0 || step > 4) return;
+      if (!silentPop && step !== currentStep) {
+        playScreenSwipe();
+      }
+
+      // Khi rời Màn 5: dừng chuông gọi & rung, clearInterval(callTimerId), pause video và phát lại nhạc nền nếu trước đó đang bật
+      if (currentStep === 4 && step !== 4) {
+        cleanupStage5Media();
+        if (bgmPausedForCall && !bgmUserPaused) {
+          bgmPausedForCall = false;
+          setTimeout(() => tryAutoplayBgm(), 120);
+        }
+      }
+
+      document.querySelectorAll('.screen-stage').forEach((st, i) => {
+        st.classList.toggle('active', i === step);
+      });
+      document.querySelectorAll('.step-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === step);
+      });
+
+      currentStep = step;
+      document.getElementById('btnPrev').classList.toggle('show', step > 0);
+
+      const nextBtnText = document.getElementById('nextBtnText');
+      const nextBtnIcon = document.getElementById('nextBtnIcon');
+      if (step === 4) {
+        nextBtnText.textContent = "Xem lại từ đầu";
+        nextBtnIcon.textContent = "🔄";
+      } else {
+        nextBtnText.textContent = "Tiếp nè";
+        nextBtnIcon.textContent = "⬇";
+      }
+
+      if (step === 1 && document.getElementById('balloonSky').children.length === 0) {
+        renderBalloons();
+      } else if (step === 2) {
+        renderAlbum();
+      } else if (step === 3) {
+        initHoloInteraction();
+      } else if (step === 4) {
+        if (!document.getElementById('activeVideoRoom').classList.contains('connected')) {
+          startRingtone();
+        }
+      }
+    }
+
+    function navigateScreen(dir) {
+      playScreenSwipe();
+      if (dir === 1 && currentStep === 4) {
+        jumpToScreen(0, true);
+        return;
+      }
+      jumpToScreen(currentStep + dir, true);
+    }
+
+    // ================= MÀN 1 =================
+    function openEnvelope() {
+      const env = document.getElementById('envelopeBox');
+      if (!env.classList.contains('opened')) {
+        playEnvelopeChime();
+        env.classList.add('opened');
+        document.getElementById('mascotBubble').innerHTML = `<span class="zh-text" lang="zh">老师好！</span><br>Mẹ mở được quà rồi nè~ 💌`;
+        const hint = document.getElementById('envelopeHint');
+        if (hint) {
+          hint.textContent = "✨ Thư đã mở rồi! Bấm 'Tiếp nè' bên dưới nha Mẹ";
+          hint.classList.add('opened-hint');
+        }
+        if (window.confetti) confetti({ particleCount: 45, spread: 75, origin: { y: 0.62 } });
+      }
+    }
+
+    let pokeCount = 0;
+    function pokeMascot() {
+      pokeCount++;
+      playBearGiggle(pokeCount >= 3);
+      if (pokeCount >= 3) {
+        document.getElementById('blushL').style.fill = '#FF2A6D';
+        document.getElementById('blushR').style.fill = '#FF2A6D';
+        document.getElementById('mascotBubble').innerHTML = `<span class="zh-text" lang="zh">老师，别逗我啦～</span><br>Mẹ đừng chọc con mà 🥹💖`;
+      }
+    }
+
+    function triggerEasterEgg(e) {
+      e.stopPropagation();
+      playMischiefSfx();
+      document.getElementById('mascotBubble').innerHTML = `<span class="zh-text" lang="zh">老师真调皮！</span><br>Mẹ nghịch quá 😆`;
+      if (window.confetti) confetti({ particleCount: 20, spread: 50 });
+    }
+
+    // ================= MÀN 2 =================
+    function renderBalloons() {
+      const sky = document.getElementById('balloonSky');
+      sky.innerHTML = '';
+      
+      const positions = [
+        { left: '10%', top: '8%' },
+        { left: '64%', top: '6%' },
+        { left: '38%', top: '28%' },
+        { left: '12%', top: '52%' },
+        { left: '62%', top: '48%' },
+        { left: '36%', top: '70%' }
+      ];
+
+      BALLOON_DATA.forEach((data, i) => {
+        const b = document.createElement('div');
+        b.className = 'balloon-item';
+        b.style.left = positions[i].left;
+        b.style.top = positions[i].top;
+        b.style.backgroundColor = data.color;
+        b.style.color = data.color;
+        b.style.animationDelay = (i * 0.45) + 's';
+        
+        b.innerHTML = `
+          <div class="balloon-highlight"></div>
+          <span style="color:white; z-index:2;">${i + 1}</span>
+        `;
+        b.onclick = () => popBalloon(b, i);
+        sky.appendChild(b);
+      });
+    }
+
+    function popBalloon(element, idx) {
+      playBalloonPop(idx);
+      element.style.transform = 'scale(1.5)';
+      element.style.opacity = '0';
+      setTimeout(() => element.remove(), 220);
+
+      const wish = BALLOON_DATA[idx];
+      
+      // HIỂN THỊ NỔ BUNG GIỮA MÀN HÌNH THEO ĐÚNG YÊU CẦU
+      document.getElementById('wishCardIcon').textContent = wish.icon;
+      document.getElementById('wishCardZh').textContent = wish.zh;
+      document.getElementById('wishCardPy').textContent = wish.py;
+      document.getElementById('wishCardVi').textContent = wish.vi;
+      document.getElementById('wishCenterOverlay').classList.add('show');
+
+      // Thêm vào danh sách đã mở ở phía dưới
+      const notice = document.getElementById('emptyWishNotice');
+      if (notice) notice.remove();
+
+      const list = document.getElementById('openedWishesList');
+      const chip = document.createElement('div');
+      chip.className = 'mini-wish-chip';
+      chip.innerHTML = `
+        <div>
+          <span class="zh-text" lang="zh" style="font-weight:800; color:#D90429;">${wish.zh}</span>
+          <span class="pinyin-line">${wish.py}</span>
+          <div style="font-size:12px; color:var(--text-dark); margin-top:2px;">${wish.vi}</div>
+        </div>
+        <span style="font-size:20px; margin-left:8px;">${wish.icon}</span>
+      `;
+      list.prepend(chip);
+
+      poppedCount++;
+      document.getElementById('poppedCount').textContent = poppedCount;
+
+      if (poppedCount === 6) {
+        setTimeout(() => playCelebrationFanfare(), 160);
+        if (window.confetti) confetti({ particleCount: 55, spread: 85, origin: { y: 0.6 } });
+      }
+    }
+
+    function closeCenterWish() {
+      playButtonPop(580);
+      document.getElementById('wishCenterOverlay').classList.remove('show');
+    }
+
+    // ================= MÀN 3: ALBUM POLAROID CHỒNG TẤM =================
+    function renderAlbum() {
+      const deck = document.getElementById('polaroidDeck');
+      const strip = document.getElementById('photoThumbs');
+
+      if (!albumBuilt) {
+        deck.innerHTML = '';
+        PHOTO_ALBUM.forEach((p, idx) => {
+          const card = document.createElement('div');
+          card.className = 'polaroid-card';
+          card.dataset.photoIndex = idx;
+          card.style.setProperty('--card-rot', p.rot);
+          card.innerHTML = `
+            <div class="washi-tape ${p.tapeClass}"></div>
+            <div class="polaroid-photo-wrapper">
+              <img src="${p.url}" alt="Kỷ niệm ${idx + 1} cùng mẹ Huyền">
+            </div>
+            <div class="polaroid-caption">${p.caption}</div>
+          `;
+          deck.appendChild(card);
+        });
+
+        strip.innerHTML = '';
+        PHOTO_ALBUM.forEach((p, idx) => {
+          const thumb = document.createElement('div');
+          thumb.className = `thumb-item ${idx === currentPhotoIdx ? 'active' : ''}`;
+          thumb.innerHTML = `<img src="${p.url}" alt="Ảnh thu nhỏ ${idx + 1}">`;
+          thumb.onclick = (e) => {
+            e.stopPropagation();
+            const dir = idx < currentPhotoIdx ? 'prev' : 'next';
+            updatePhoto(idx, { direction: dir });
+          };
+          strip.appendChild(thumb);
+        });
+
+        albumBuilt = true;
+      }
+
+      syncPolaroidStack(currentPhotoIdx);
+    }
+
+    function syncPolaroidStack(activeIdx) {
+      const total = PHOTO_ALBUM.length;
+      document.querySelectorAll('#polaroidDeck .polaroid-card').forEach((card) => {
+        const cardIdx = Number(card.dataset.photoIndex);
+        const pos = (cardIdx - activeIdx + total) % total;
+        card.setAttribute('data-stack-pos', String(pos));
+      });
+
+      document.getElementById('photoIndexTxt').textContent = activeIdx + 1;
+      document.querySelectorAll('.thumb-item').forEach((item, i) => {
+        item.classList.toggle('active', i === activeIdx);
+      });
+    }
+
+    function updatePhoto(idx, options = {}) {
+      const { silent = false, direction = 'next' } = options;
+      if (idx === currentPhotoIdx || isPhotoFlipping) return;
+
+      isPhotoFlipping = true;
+      if (!silent) playPhotoFlip();
+
+      const total = PHOTO_ALBUM.length;
+      const cards = Array.from(document.querySelectorAll('#polaroidDeck .polaroid-card'));
+      const outgoingCard = cards.find(c => Number(c.dataset.photoIndex) === currentPhotoIdx);
+      const flipClass = direction === 'prev' ? 'flip-out-prev' : 'flip-out-next';
+
+      // Cập nhật chỉ số và đẩy các tấm phía sau trượt lên mượt mà
+      currentPhotoIdx = idx;
+      document.getElementById('photoIndexTxt').textContent = idx + 1;
+      document.querySelectorAll('.thumb-item').forEach((item, i) => {
+        item.classList.toggle('active', i === idx);
+      });
+
+      cards.forEach((card) => {
+        if (card === outgoingCard) return;
+        const cardIdx = Number(card.dataset.photoIndex);
+        const pos = (cardIdx - idx + total) % total;
+        card.setAttribute('data-stack-pos', String(pos));
+      });
+
+      if (outgoingCard) {
+        outgoingCard.classList.add(flipClass);
+        setTimeout(() => {
+          const backPos = (Number(outgoingCard.dataset.photoIndex) - idx + total) % total;
+          outgoingCard.style.transition = 'none';
+          outgoingCard.classList.remove(flipClass);
+          outgoingCard.setAttribute('data-stack-pos', String(backPos));
+          void outgoingCard.offsetWidth;
+          outgoingCard.style.transition = '';
+          isPhotoFlipping = false;
+        }, 370);
+      } else {
+        isPhotoFlipping = false;
+      }
+    }
+
+    function nextPhoto() {
+      const next = (currentPhotoIdx + 1) % PHOTO_ALBUM.length;
+      updatePhoto(next, { direction: 'next' });
+    }
+
+    // ================= MÀN 4: THẺ SSR (CHỈ GẮN LISTENER 1 LẦN DUY NHẤT) =================
+    function initHoloInteraction() {
+      if (holoInitialized) return;
+      holoInitialized = true;
+
+      const card = document.getElementById('holoCard');
+      const glare = document.getElementById('holoGlare');
+
+      card.addEventListener('pointermove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        card.style.transform = `rotateX(${-(y - cy) / cy * 16}deg) rotateY(${(x - cx) / cx * 16}deg)`;
+        glare.style.backgroundPosition = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`;
+        playHoloShimmer();
+      });
+
+      card.addEventListener('pointerleave', () => {
+        card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        glare.style.backgroundPosition = '50% 50%';
+      });
+
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', (e) => {
+          if (currentStep !== 3) return;
+          const gamma = Math.max(-20, Math.min(20, (e.gamma || 0) * 0.6));
+          const beta = Math.max(-20, Math.min(20, ((e.beta || 0) - 45) * 0.6));
+          card.style.transform = `rotateX(${-beta}deg) rotateY(${gamma}deg)`;
+          glare.style.backgroundPosition = `${((gamma + 20) / 40) * 100}% ${((beta + 20) / 40) * 100}%`;
+        });
+      }
+    }
+
+    // ================= MÀN 5: VIDEO CALL & LỜI CHÚC TRI ÂN =================
+    function startCallTimer() {
+      clearCallTimer();
+      callSec = 0;
+      document.getElementById('callTimer').textContent = '00:00';
+      callTimerId = setInterval(() => {
+        callSec++;
+        const m = String(Math.floor(callSec / 60)).padStart(2, '0');
+        const s = String(callSec % 60).padStart(2, '0');
+        document.getElementById('callTimer').textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function dodgeDecline() {
+      playDodgeWhoosh();
+      const btn = document.getElementById('btnDecline');
+      btn.style.transform = `translate(${(Math.random() - 0.5) * 120}px, ${(Math.random() - 0.5) * 100}px)`;
+    }
+
+    function acceptCall() {
+      // Tắt chuông gọi & hiệu ứng rung, tạm dừng nhạc nền #bgmAudio
+      stopRingtone();
+      bgmPausedForCall = true;
+      pauseBgm();
+      playButtonPop(820);
+
+      // Đặt lại trạng thái loa/camera của cuộc gọi video
+      if (tributeVideo) tributeVideo.muted = false;
+      syncCallMuteUI(false);
+      setCallCameraState(true);
+
+      const statusText = document.getElementById('callStatusText');
+      if (statusText) {
+        statusText.textContent = 'Đang kết nối...';
+        setTimeout(() => {
+          if (document.getElementById('activeVideoRoom').classList.contains('connected')) {
+            statusText.textContent = 'Đang gọi';
+          }
+        }, 600);
+      }
+
+      document.getElementById('finalOverlay').classList.remove('show');
+      document.getElementById('activeVideoRoom').classList.add('connected');
+      startCallTimer();
+
+      if (tributeVideo) {
+        tributeVideo.currentTime = 0;
+        tributeVideo.play().catch(() => {});
+      }
+    }
+
+    function syncCallMuteUI(isMuted) {
+      const btn = document.getElementById('btnCallMute');
+      const iconOn = document.getElementById('iconCallSoundOn');
+      const iconOff = document.getElementById('iconCallSoundOff');
+      const label = document.getElementById('labelCallMute');
+      if (btn) btn.classList.toggle('is-off', isMuted);
+      if (iconOn) iconOn.style.display = isMuted ? 'none' : 'block';
+      if (iconOff) iconOff.style.display = isMuted ? 'block' : 'none';
+      if (label) label.textContent = isMuted ? 'Tắt loa' : 'Loa';
+    }
+
+    function toggleCallMute() {
+      playButtonPop(640);
+      if (!tributeVideo) return;
+      tributeVideo.muted = !tributeVideo.muted;
+      syncCallMuteUI(tributeVideo.muted);
+    }
+
+    let isCallCamOn = true;
+    function setCallCameraState(on) {
+      isCallCamOn = on;
+      const pip = document.getElementById('callPipPreview');
+      const btn = document.getElementById('btnCallCam');
+      const iconOn = document.getElementById('iconCallCamOn');
+      const iconOff = document.getElementById('iconCallCamOff');
+      const label = document.getElementById('labelCallCam');
+      if (pip) pip.classList.toggle('cam-off', !on);
+      if (btn) btn.classList.toggle('is-off', !on);
+      if (iconOn) iconOn.style.display = on ? 'block' : 'none';
+      if (iconOff) iconOff.style.display = on ? 'none' : 'block';
+      if (label) label.textContent = on ? 'Camera' : 'Tắt cam';
+    }
+
+    function toggleCallCamera() {
+      playButtonPop(620);
+      setCallCameraState(!isCallCamOn);
+    }
+
+    function sendCallHeart() {
+      playTapSparkle();
+      const room = document.getElementById('activeVideoRoom');
+      if (!room) return;
+      const hearts = ['❤️', '💖', '🌸', '✨', '🥰'];
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'call-float-heart';
+          el.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+          el.style.left = (48 + Math.random() * 26) + '%';
+          el.style.setProperty('--hx1', ((Math.random() - 0.5) * 32) + 'px');
+          el.style.setProperty('--hx2', ((Math.random() - 0.5) * 65) + 'px');
+          room.appendChild(el);
+          setTimeout(() => el.remove(), 1500);
+        }, i * 110);
+      }
+    }
+
+    function endVideoCall() {
+      playButtonPop(520);
+      cleanupStage5Media();
+    }
+
+    function triggerCelebration() {
+      clearCallTimer();
+      if (tributeVideo && !tributeVideo.paused) {
+        tributeVideo.pause();
+      }
+      playCelebrationFanfare();
+      document.getElementById('finalOverlay').classList.add('show');
+      if (window.confetti) {
+        confetti({ particleCount: 75, spread: 85, origin: { y: 0.5 } });
+      }
+    }
+
+    function replayCelebration() {
+      playButtonPop(680);
+      pauseBgm();
+      document.getElementById('finalOverlay').classList.remove('show');
+      startCallTimer();
+      if (tributeVideo) {
+        tributeVideo.currentTime = 0;
+        tributeVideo.play().catch(() => {});
+      }
+    }
+
+    function openThankYouModal() {
+      playCelebrationFanfare();
+      document.getElementById('thankyouModal').classList.add('show');
+      if (window.confetti) confetti({ particleCount: 55, spread: 75 });
+    }
+
+    function closeThankYouModal(e) {
+      if (!e || e.target.id === 'thankyouModal' || e.target.tagName === 'BUTTON') {
+        playButtonPop(580);
+        document.getElementById('thankyouModal').classList.remove('show');
+      }
+    }
+
+    // Khởi tạo ảnh màn 3 sẵn
+    renderAlbum();
+  </script>
+</body>
+</html>
